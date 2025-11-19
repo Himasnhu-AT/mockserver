@@ -1,0 +1,35 @@
+{
+  "name": "mockserver",
+  "version": "0.0.1",
+  "description": "create mock server on the go from ui or json schema",
+  "keywords": [
+    "mockserver",
+    "bakend",
+    "testing",
+    "fake"
+  ],
+  "homepage": "https://github.com/himasnhu-at/mockserver#readme",
+  "bugs": {
+    "url": "https://github.com/himasnhu-at/mockserver/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/himasnhu-at/mockserver.git"
+  },
+  "license": "ISC",
+  "author": {
+    "name": "Himanshu",
+    "email": "hyattherate2005@gmail.com",
+    "url": "https://himanshuat.com"
+  },
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc && dist index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@types/node": "^20"
+  }
+}
