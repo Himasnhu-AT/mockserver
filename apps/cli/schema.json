@@ -1,0 +1,39 @@
+{
+  "port": 9500,
+  "chaos": {
+    "globalErrorRate": 0.05,
+    "enabled": true
+  },
+  "resources": [
+    {
+      "id": "users-1",
+      "name": "Users",
+      "endpoint": "/users",
+      "count": 18,
+      "errorConfig": {
+        "rate": 0.8,
+        "code": 500,
+        "message": "Database Connection Failed"
+      },
+      "fields": {
+        "id": "uuid",
+        "firstName": "firstName",
+        "email": "email",
+        "avatar": "avatar",
+        "role": "enum:admin,user,guest"
+      }
+    },
+    {
+      "id": "posts-1",
+      "name": "Posts",
+      "endpoint": "/posts",
+      "count": 10,
+      "fields": {
+        "id": "uuid",
+        "title": "sentence",
+        "content": "paragraph",
+        "likes": "integer"
+      }
+    }
+  ]
+}
