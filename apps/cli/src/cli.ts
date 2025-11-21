@@ -1,161 +1,70 @@
+#!/usr/bin/env node
+
 import { Command } from "commander";
-import express from "express";
-import type { Request, Response, NextFunction } from "express";
-import bodyParser from "body-parser";
-import cors from "cors";
-import fs from "fs";
-import path from "path";
-import { faker } from "@faker-js/faker";
+import chalk from "chalk";
+import { startServer } from "./commands/start";
+import { initCommand } from "./commands/init";
+import { validateCommand } from "./commands/validate";
+import { infoCommand } from "./commands/info";
+import { generateCommand } from "./commands/generate";
+import figlet from "figlet";
 
-// --- Types ---
-type FieldType =
-  | "uuid"
-  | "email"
-  | "firstName"
-  | "sentence"
-  | "paragraph"
-  | "avatar"
-  | "integer"
-  | string;
-
-interface Resource {
-  id: string;
-  name: string;
-  endpoint: string;
-  count: number;
-  fields: Record<string, FieldType>;
-  errorConfig?: {
-    rate: number; // 0.0 to 1.0
-    code: number;
-    message: string;
-  };
-}
-
-interface Schema {
-  port: number;
-  chaos: {
-    globalErrorRate: number;
-    enabled: boolean;
-  };
-  resources: Resource[];
-}
-
-// --- Data Generator Factory ---
-// This is the shared brain for both Mock Server and Database Seeder
-const generateData = (fields: Record<string, FieldType>, count: number) => {
-  return Array.from({ length: count }).map(() => {
-    const row: any = {};
-
-    for (const [key, type] of Object.entries(fields)) {
-      if (type === "uuid") row[key] = faker.string.uuid();
-      else if (type === "email") row[key] = faker.internet.email();
-      else if (type === "firstName") row[key] = faker.person.firstName();
-      else if (type === "sentence") row[key] = faker.lorem.sentence();
-      else if (type === "paragraph") row[key] = faker.lorem.paragraph();
-      else if (type === "avatar") row[key] = faker.image.avatar();
-      else if (type === "integer")
-        row[key] = faker.number.int({ min: 0, max: 1000 });
-      else if (type.startsWith("enum:")) {
-        const options = type.replace("enum:", "").split(",");
-        row[key] = faker.helpers.arrayElement(options);
-      } else {
-        row[key] = `Unknown Type: ${type}`;
-      }
-    }
-    return row;
-  });
-};
-
-// --- CLI Setup ---
 const program = new Command();
-const SCHEMA_PATH = path.join(process.cwd(), "schema.json");
 
-const loadSchema = (): Schema => {
-  if (!fs.existsSync(SCHEMA_PATH)) {
-    console.error("schema.json not found. Please create one.");
-    process.exit(1);
-  }
-  return JSON.parse(fs.readFileSync(SCHEMA_PATH, "utf-8"));
-};
+// ASCII Art Banner
+console.log(
+  chalk.cyan(
+    figlet.textSync("MockChaos", {
+      font: "Standard",
+      horizontalLayout: "default",
+    }),
+  ),
+);
 
-const saveSchema = (schema: Schema) => {
-  fs.writeFileSync(SCHEMA_PATH, JSON.stringify(schema, null, 2));
-};
+console.log(chalk.gray("  Dynamic Mock Server with Chaos Engineering\n"));
 
 program
   .name("mock-chaos")
-  .description("Dynamic Mock Server with Chaos Engineering capabilities");
+  .description("Spin up mock servers instantly with chaos capabilities")
+  .version("1.0.0");
 
+// Commands
 program
   .command("start")
-  .description("Start the mock server and web UI")
-  .action(() => {
-    let schema = loadSchema();
-    const app = express();
+  .description("Start the mock server")
+  .option("-p, --port <port>", "Override port from schema")
+  .option("-h, --host <host>", "Host address", "localhost")
+  .option("--no-chaos", "Disable chaos engineering")
+  .option("-w, --watch", "Watch schema file for changes")
+  .action(startServer);
 
-    app.use(cors());
-    app.use(bodyParser.json());
+program
+  .command("init")
+  .description("Initialize a new schema.json")
+  .option("-t, --template <name>", "Use template (social, ecommerce, basic)")
+  .option("-f, --force", "Overwrite existing schema")
+  .action(initCommand);
 
-    // 1. System API (For the Web UI to control the CLI)
-    app.get("/_system/schema", (_req, res) => {
-      res.json(loadSchema());
-    });
+program
+  .command("validate")
+  .description("Validate schema.json")
+  .option("-s, --schema <path>", "Path to schema file")
+  .action(validateCommand);
 
-    app.post("/_system/schema", (req, res) => {
-      try {
-        schema = req.body; // Update in-memory
-        saveSchema(schema); // Persist to disk
-        console.log("🔄 Schema updated via Web UI");
-        res.json({ success: true, message: "Schema updated" });
-      } catch (e) {
-        res.status(500).json({ error: "Failed to save schema" });
-      }
-    });
+program
+  .command("info")
+  .description("Show current schema information")
+  .action(infoCommand);
 
-    // 2. Dynamic Middleware for Chaos & Routes
-    app.use((req: Request, res: Response, next: NextFunction) => {
-      // Skip system routes
-      if (req.path.startsWith("/_system")) return next();
-
-      // Find matching resource in schema
-      const resource = schema.resources.find((r) => r.endpoint === req.path);
-
-      if (resource) {
-        // A. CHAOS CHECK
-        const shouldError =
-          schema.chaos.enabled &&
-          Math.random() <
-            (resource.errorConfig?.rate || schema.chaos.globalErrorRate);
-
-        if (shouldError) {
-          const code = resource.errorConfig?.code || 500;
-          const msg = resource.errorConfig?.message || "Chaos Monkey struck!";
-          console.log(`🔥 Injecting Chaos Error (${code}) on ${req.path}`);
-          return res.status(code).json({ error: msg });
-        }
-
-        // B. SUCCESS RESPONSE
-        const data = generateData(resource.fields, resource.count);
-        return res.json(data);
-      }
-
-      next();
-    });
-
-    app.listen(schema.port, () => {
-      console.log(`
-🚀 CLI Server Running
----------------------
-📡 API Base:    http://localhost:${schema.port}
-🔧 Dashboard:   http://localhost:3000?host=localhost:9500 (Not implemented in this file, serve React here)
-📂 Schema:      ${SCHEMA_PATH}
-      `);
-
-      // Log active routes
-      schema.resources.forEach((r) => {
-        console.log(`   ➜  GET ${r.endpoint} (${r.count} items)`);
-      });
-    });
-  });
+program
+  .command("generate")
+  .description("Generate static JSON files from schema")
+  .option("-o, --output <dir>", "Output directory", "./mock-data")
+  .action(generateCommand);
 
 program.parse(process.argv);
+
+// Show help if no command provided
+if (!process.argv.slice(2).length) {
+  program.outputHelp();
+}

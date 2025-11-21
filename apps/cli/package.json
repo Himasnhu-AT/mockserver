@@ -2,11 +2,27 @@
   "name": "mockserver",
   "version": "0.0.1",
   "description": "create mock server on the go from ui or json schema",
+  "bin": {
+    "mock-chaos": "./dist/cli.js"
+  },
+  "main": "dist/cli.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/cli.ts",
+    "start": "node dist/cli.js start",
+    "lint": "eslint src --ext .ts",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "keywords": [
-    "mockserver",
-    "bakend",
+    "mock",
+    "server",
+    "api",
     "testing",
-    "fake"
+    "chaos",
+    "engineering",
+    "frontend",
+    "development"
   ],
   "homepage": "https://github.com/himasnhu-at/mockserver#readme",
   "bugs": {
@@ -23,13 +39,6 @@
     "url": "https://himanshuat.com"
   },
   "type": "module",
-  "main": "index.js",
-  "scripts": {
-    "build": "tsc",
-    "start": "node dist/index.js",
-    "dev": "tsx src/cli.ts start",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "devDependencies": {
     "@types/body-parser": "^1.19.6",
     "@types/cors": "^2.8.19",
@@ -42,8 +51,13 @@
   "dependencies": {
     "@faker-js/faker": "^10.1.0",
     "body-parser": "^2.2.0",
+    "chalk": "^5.6.2",
+    "cli-table3": "^0.6.5",
     "commander": "^14.0.2",
     "cors": "^2.8.5",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "figlet": "^1.9.4",
+    "inquirer": "^13.0.1",
+    "ora": "^9.0.0"
   }
 }

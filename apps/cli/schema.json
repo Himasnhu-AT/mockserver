@@ -1,38 +1,531 @@
 {
   "port": 9500,
+  "host": "localhost",
+  "delay": {
+    "enabled": false,
+    "min": 100,
+    "max": 1000
+  },
   "chaos": {
+    "enabled": true,
     "globalErrorRate": 0.05,
-    "enabled": true
+    "scenarios": {
+      "timeout": 0.02,
+      "serverError": 0.03,
+      "networkError": 0.02
+    }
+  },
+  "auth": {
+    "enabled": false,
+    "type": "bearer",
+    "tokens": ["mock-token-123", "admin-token-456"]
+  },
+  "cors": {
+    "enabled": true,
+    "origins": ["*"]
+  },
+  "logging": {
+    "level": "info",
+    "format": "pretty",
+    "requests": true
   },
   "resources": [
     {
-      "id": "users-1",
+      "id": "users",
       "name": "Users",
-      "endpoint": "/users",
-      "count": 18,
-      "errorConfig": {
-        "rate": 0.8,
-        "code": 500,
-        "message": "Database Connection Failed"
+      "endpoint": "/api/users",
+      "method": "GET",
+      "count": 50,
+      "pagination": {
+        "enabled": true,
+        "pageSize": 20
       },
       "fields": {
         "id": "uuid",
-        "firstName": "firstName",
+        "username": "username",
         "email": "email",
+        "firstName": "firstName",
+        "lastName": "lastName",
         "avatar": "avatar",
-        "role": "enum:admin,user,guest"
+        "bio": "sentence",
+        "verified": "boolean",
+        "followersCount": "integer:0:10000",
+        "followingCount": "integer:0:5000",
+        "postsCount": "integer:0:500",
+        "role": "enum:user,creator,admin",
+        "status": "enum:active,inactive,suspended",
+        "createdAt": "date:past",
+        "updatedAt": "date:recent"
+      },
+      "errorConfig": {
+        "rate": 0.02,
+        "code": 503,
+        "message": "User service temporarily unavailable"
       }
     },
     {
-      "id": "posts-1",
-      "name": "Posts",
-      "endpoint": "/posts",
+      "id": "user-detail",
+      "name": "User Detail",
+      "endpoint": "/api/users/:id",
+      "method": "GET",
+      "count": 1,
+      "fields": {
+        "id": "uuid",
+        "username": "username",
+        "email": "email",
+        "firstName": "firstName",
+        "lastName": "lastName",
+        "avatar": "avatar",
+        "coverPhoto": "image:landscape",
+        "bio": "paragraph",
+        "website": "url",
+        "location": "city",
+        "verified": "boolean",
+        "followersCount": "integer:0:10000",
+        "followingCount": "integer:0:5000",
+        "postsCount": "integer:0:500",
+        "likesReceived": "integer:0:50000",
+        "role": "enum:user,creator,admin",
+        "status": "enum:active,inactive,suspended",
+        "joinedAt": "date:past",
+        "lastActive": "date:recent",
+        "metadata": {
+          "theme": "enum:light,dark,auto",
+          "language": "enum:en,es,fr,de,ja",
+          "timezone": "timezone"
+        }
+      }
+    },
+    {
+      "id": "posts",
+      "name": "Posts Feed",
+      "endpoint": "/api/posts",
+      "method": "GET",
+      "count": 100,
+      "pagination": {
+        "enabled": true,
+        "pageSize": 15
+      },
+      "fields": {
+        "id": "uuid",
+        "userId": "uuid",
+        "username": "username",
+        "userAvatar": "avatar",
+        "content": "paragraph",
+        "media": "array:image:0:5",
+        "mediaType": "enum:none,image,video,carousel",
+        "likesCount": "integer:0:10000",
+        "commentsCount": "integer:0:1000",
+        "sharesCount": "integer:0:500",
+        "viewsCount": "integer:0:50000",
+        "isLiked": "boolean",
+        "isBookmarked": "boolean",
+        "hashtags": "array:word:0:8",
+        "mentions": "array:username:0:5",
+        "location": "city",
+        "visibility": "enum:public,followers,private",
+        "createdAt": "date:recent",
+        "editedAt": "date:recent:nullable"
+      },
+      "errorConfig": {
+        "rate": 0.05,
+        "code": 500,
+        "message": "Failed to load feed"
+      }
+    },
+    {
+      "id": "post-detail",
+      "name": "Post Detail",
+      "endpoint": "/api/posts/:id",
+      "method": "GET",
+      "count": 1,
+      "fields": {
+        "id": "uuid",
+        "userId": "uuid",
+        "username": "username",
+        "userAvatar": "avatar",
+        "userVerified": "boolean",
+        "content": "paragraph",
+        "media": "array:image:0:5",
+        "mediaType": "enum:none,image,video,carousel",
+        "likesCount": "integer:0:10000",
+        "commentsCount": "integer:0:1000",
+        "sharesCount": "integer:0:500",
+        "viewsCount": "integer:0:50000",
+        "isLiked": "boolean",
+        "isBookmarked": "boolean",
+        "hashtags": "array:word:0:8",
+        "mentions": "array:username:0:5",
+        "location": "city",
+        "visibility": "enum:public,followers,private",
+        "createdAt": "date:recent",
+        "editedAt": "date:recent:nullable"
+      }
+    },
+    {
+      "id": "user-posts",
+      "name": "User Posts",
+      "endpoint": "/api/users/:id/posts",
+      "method": "GET",
+      "count": 30,
+      "pagination": {
+        "enabled": true,
+        "pageSize": 12
+      },
+      "fields": {
+        "id": "uuid",
+        "content": "paragraph",
+        "media": "array:image:0:5",
+        "mediaType": "enum:none,image,video,carousel",
+        "likesCount": "integer:0:10000",
+        "commentsCount": "integer:0:1000",
+        "sharesCount": "integer:0:500",
+        "viewsCount": "integer:0:50000",
+        "hashtags": "array:word:0:8",
+        "createdAt": "date:recent"
+      }
+    },
+    {
+      "id": "comments",
+      "name": "Post Comments",
+      "endpoint": "/api/posts/:id/comments",
+      "method": "GET",
+      "count": 25,
+      "pagination": {
+        "enabled": true,
+        "pageSize": 10
+      },
+      "fields": {
+        "id": "uuid",
+        "postId": "uuid",
+        "userId": "uuid",
+        "username": "username",
+        "userAvatar": "avatar",
+        "userVerified": "boolean",
+        "content": "sentence",
+        "likesCount": "integer:0:500",
+        "repliesCount": "integer:0:50",
+        "isLiked": "boolean",
+        "isPinned": "boolean",
+        "createdAt": "date:recent",
+        "editedAt": "date:recent:nullable"
+      }
+    },
+    {
+      "id": "comment-replies",
+      "name": "Comment Replies",
+      "endpoint": "/api/comments/:id/replies",
+      "method": "GET",
       "count": 10,
       "fields": {
         "id": "uuid",
-        "title": "sentence",
+        "commentId": "uuid",
+        "userId": "uuid",
+        "username": "username",
+        "userAvatar": "avatar",
+        "content": "sentence",
+        "likesCount": "integer:0:100",
+        "isLiked": "boolean",
+        "createdAt": "date:recent"
+      }
+    },
+    {
+      "id": "likes",
+      "name": "Post Likes",
+      "endpoint": "/api/posts/:id/likes",
+      "method": "GET",
+      "count": 50,
+      "pagination": {
+        "enabled": true,
+        "pageSize": 20
+      },
+      "fields": {
+        "id": "uuid",
+        "userId": "uuid",
+        "username": "username",
+        "avatar": "avatar",
+        "verified": "boolean",
+        "likedAt": "date:recent"
+      }
+    },
+    {
+      "id": "followers",
+      "name": "User Followers",
+      "endpoint": "/api/users/:id/followers",
+      "method": "GET",
+      "count": 100,
+      "pagination": {
+        "enabled": true,
+        "pageSize": 30
+      },
+      "fields": {
+        "id": "uuid",
+        "username": "username",
+        "firstName": "firstName",
+        "lastName": "lastName",
+        "avatar": "avatar",
+        "verified": "boolean",
+        "bio": "sentence",
+        "isFollowing": "boolean",
+        "isFollower": "boolean",
+        "followedAt": "date:recent"
+      }
+    },
+    {
+      "id": "following",
+      "name": "User Following",
+      "endpoint": "/api/users/:id/following",
+      "method": "GET",
+      "count": 80,
+      "pagination": {
+        "enabled": true,
+        "pageSize": 30
+      },
+      "fields": {
+        "id": "uuid",
+        "username": "username",
+        "firstName": "firstName",
+        "lastName": "lastName",
+        "avatar": "avatar",
+        "verified": "boolean",
+        "bio": "sentence",
+        "isFollowing": "boolean",
+        "followedAt": "date:recent"
+      }
+    },
+    {
+      "id": "notifications",
+      "name": "Notifications",
+      "endpoint": "/api/notifications",
+      "method": "GET",
+      "count": 50,
+      "pagination": {
+        "enabled": true,
+        "pageSize": 20
+      },
+      "fields": {
+        "id": "uuid",
+        "type": "enum:like,comment,follow,mention,share",
+        "actorId": "uuid",
+        "actorUsername": "username",
+        "actorAvatar": "avatar",
+        "targetType": "enum:post,comment,user",
+        "targetId": "uuid",
+        "content": "sentence",
+        "isRead": "boolean",
+        "createdAt": "date:recent"
+      }
+    },
+    {
+      "id": "stories",
+      "name": "Stories",
+      "endpoint": "/api/stories",
+      "method": "GET",
+      "count": 20,
+      "fields": {
+        "id": "uuid",
+        "userId": "uuid",
+        "username": "username",
+        "userAvatar": "avatar",
+        "storiesCount": "integer:1:8",
+        "unseenCount": "integer:0:8",
+        "latestStory": {
+          "id": "uuid",
+          "media": "image",
+          "mediaType": "enum:image,video",
+          "createdAt": "date:recent"
+        },
+        "hasUnseen": "boolean"
+      }
+    },
+    {
+      "id": "user-stories",
+      "name": "User Stories Detail",
+      "endpoint": "/api/users/:id/stories",
+      "method": "GET",
+      "count": 5,
+      "fields": {
+        "id": "uuid",
+        "userId": "uuid",
+        "media": "image",
+        "mediaType": "enum:image,video",
+        "duration": "integer:3:15",
+        "viewsCount": "integer:0:5000",
+        "isSeen": "boolean",
+        "createdAt": "date:recent",
+        "expiresAt": "date:future"
+      }
+    },
+    {
+      "id": "messages",
+      "name": "Direct Messages",
+      "endpoint": "/api/messages",
+      "method": "GET",
+      "count": 30,
+      "pagination": {
+        "enabled": true,
+        "pageSize": 20
+      },
+      "fields": {
+        "id": "uuid",
+        "conversationId": "uuid",
+        "participants": "array:username:2:2",
+        "lastMessage": {
+          "content": "sentence",
+          "senderId": "uuid",
+          "senderUsername": "username",
+          "createdAt": "date:recent"
+        },
+        "unreadCount": "integer:0:50",
+        "isOnline": "boolean",
+        "updatedAt": "date:recent"
+      }
+    },
+    {
+      "id": "conversation",
+      "name": "Conversation Messages",
+      "endpoint": "/api/conversations/:id/messages",
+      "method": "GET",
+      "count": 50,
+      "pagination": {
+        "enabled": true,
+        "pageSize": 30
+      },
+      "fields": {
+        "id": "uuid",
+        "conversationId": "uuid",
+        "senderId": "uuid",
+        "senderUsername": "username",
+        "senderAvatar": "avatar",
+        "content": "sentence",
+        "messageType": "enum:text,image,video,audio,link",
+        "media": "image:nullable",
+        "isRead": "boolean",
+        "reactions": "array:emoji:0:5",
+        "createdAt": "date:recent"
+      }
+    },
+    {
+      "id": "hashtags",
+      "name": "Trending Hashtags",
+      "endpoint": "/api/hashtags/trending",
+      "method": "GET",
+      "count": 20,
+      "fields": {
+        "tag": "word",
+        "postsCount": "integer:1000:1000000",
+        "trend": "enum:up,down,stable",
+        "trendPercentage": "integer:-50:200"
+      }
+    },
+    {
+      "id": "hashtag-posts",
+      "name": "Hashtag Posts",
+      "endpoint": "/api/hashtags/:tag/posts",
+      "method": "GET",
+      "count": 50,
+      "pagination": {
+        "enabled": true,
+        "pageSize": 15
+      },
+      "fields": {
+        "id": "uuid",
+        "userId": "uuid",
+        "username": "username",
+        "userAvatar": "avatar",
         "content": "paragraph",
-        "likes": "integer"
+        "media": "array:image:0:5",
+        "mediaType": "enum:none,image,video,carousel",
+        "likesCount": "integer:0:10000",
+        "commentsCount": "integer:0:1000",
+        "viewsCount": "integer:0:50000",
+        "createdAt": "date:recent"
+      }
+    },
+    {
+      "id": "search-users",
+      "name": "Search Users",
+      "endpoint": "/api/search/users",
+      "method": "GET",
+      "count": 20,
+      "fields": {
+        "id": "uuid",
+        "username": "username",
+        "firstName": "firstName",
+        "lastName": "lastName",
+        "avatar": "avatar",
+        "verified": "boolean",
+        "bio": "sentence",
+        "followersCount": "integer:0:10000",
+        "isFollowing": "boolean"
+      }
+    },
+    {
+      "id": "search-posts",
+      "name": "Search Posts",
+      "endpoint": "/api/search/posts",
+      "method": "GET",
+      "count": 30,
+      "pagination": {
+        "enabled": true,
+        "pageSize": 15
+      },
+      "fields": {
+        "id": "uuid",
+        "userId": "uuid",
+        "username": "username",
+        "userAvatar": "avatar",
+        "content": "paragraph",
+        "media": "array:image:0:3",
+        "likesCount": "integer:0:10000",
+        "commentsCount": "integer:0:1000",
+        "createdAt": "date:recent"
+      }
+    },
+    {
+      "id": "bookmarks",
+      "name": "User Bookmarks",
+      "endpoint": "/api/bookmarks",
+      "method": "GET",
+      "count": 25,
+      "pagination": {
+        "enabled": true,
+        "pageSize": 15
+      },
+      "fields": {
+        "id": "uuid",
+        "postId": "uuid",
+        "post": {
+          "id": "uuid",
+          "userId": "uuid",
+          "username": "username",
+          "userAvatar": "avatar",
+          "content": "paragraph",
+          "media": "array:image:0:3",
+          "likesCount": "integer:0:10000",
+          "commentsCount": "integer:0:1000",
+          "createdAt": "date:recent"
+        },
+        "bookmarkedAt": "date:recent"
+      }
+    },
+    {
+      "id": "suggested-users",
+      "name": "Suggested Users",
+      "endpoint": "/api/users/suggested",
+      "method": "GET",
+      "count": 10,
+      "fields": {
+        "id": "uuid",
+        "username": "username",
+        "firstName": "firstName",
+        "lastName": "lastName",
+        "avatar": "avatar",
+        "verified": "boolean",
+        "bio": "sentence",
+        "followersCount": "integer:0:10000",
+        "mutualFollowers": "integer:0:50",
+        "reason": "enum:popular,mutual_friends,similar_interests"
       }
     }
   ]
