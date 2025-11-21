@@ -1,5 +1,5 @@
 import ora from "ora";
-import fs from "fs";
+import * as fs from "fs";
 import path from "path";
 import { SchemaManager } from "../utils/schema";
 import { dataGenerator } from "../core/generator";

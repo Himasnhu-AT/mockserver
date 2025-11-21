@@ -2,7 +2,7 @@ import ora from "ora";
 import { SchemaManager } from "../utils/schema";
 import { MockServer } from "../core/server";
 import { logger } from "../utils/logger";
-import fs from "fs";
+import * as fs from "fs";
 import { CommandOptions } from "../types";
 
 export async function startServer(options: CommandOptions) {

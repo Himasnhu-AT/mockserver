@@ -2,12 +2,14 @@
   "compilerOptions": {
     "rootDir": "./src",
     "outDir": "./dist",
-    "module": "commonjs", // CHANGED: Allows extensionless imports
-    "moduleResolution": "node", // ADDED: Ensures Node-style resolution
+    "module": "esnext", // CHANGED: Allows extensionless imports
+    "moduleResolution": "bundler", // ADDED: Ensures Node-style resolution
     "target": "ES2021",
     "types": ["node"],
     "moduleDetection": "force",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
   },
   "include": ["src/*.ts"],
   "exclude": ["node_modules"]
