@@ -8,12 +8,12 @@ Initialize a new `schema.json` file in the current directory.
 
 ```bash
 mockserver init [options]
-````
+```
 
 **Options:**
 
-  * `-t, --template <name>`: Use a preset template (`social`, `ecommerce`, `basic`).
-  * `-f, --force`: Overwrite an existing schema file.
+- `-t, --template <name>`: Use a preset template (`social`, `ecommerce`, `basic`).
+- `-f, --force`: Overwrite an existing schema file.
 
 ## `start`
 
@@ -25,10 +25,10 @@ mockserver start [options]
 
 **Options:**
 
-  * `-p, --port <number>`: Override the port defined in the schema.
-  * `-h, --host <string>`: specific host address (default: `localhost`).
-  * `-w, --watch`: Watch the schema file for changes and auto-restart.
-  * `--no-chaos`: Disable chaos engineering features (useful for end-to-end tests).
+- `-p, --port <number>`: Override the port defined in the schema.
+- `-h, --host <string>`: specific host address (default: `localhost`).
+- `-w, --watch`: Watch the schema file for changes and auto-restart.
+- `--no-chaos`: Disable chaos engineering features (useful for end-to-end tests).
 
 ## `generate`
 

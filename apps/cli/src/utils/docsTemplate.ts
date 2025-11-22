@@ -1,4 +1,4 @@
-import { Schema, Resource, FieldType } from "../types"; // Import your interfaces
+import { Schema, FieldType } from "../types"; // Import your interfaces
 
 /**
  * Helper to generate a dummy JSON example based on your FieldTypes

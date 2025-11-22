@@ -80,7 +80,7 @@ export default function LandingPage() {
                 className="group-hover:translate-x-1 transition-transform"
               />
             </button>
-            <CodeBlock command="npx mockserver start" />
+            <CodeBlock command="npx mockserver-cli start" />
           </motion.div>
 
           {/* Hero Terminal Mockup */}
@@ -106,7 +106,9 @@ export default function LandingPage() {
                 <div className="flex gap-2 mb-4 opacity-50">
                   <span className="text-green-400">➜</span>
                   <span className="text-blue-400">~</span>
-                  <span className="text-gray-300">npx mockserver start</span>
+                  <span className="text-gray-300">
+                    npx mockserver-cli start
+                  </span>
                 </div>
                 <motion.div
                   initial="hidden"

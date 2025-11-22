@@ -9,22 +9,22 @@ Chaos mode is configured globally in your schema:
 ```json
 "chaos": {
   "enabled": true,
-  "globalErrorRate": 0.1, 
+  "globalErrorRate": 0.1,
   "scenarios": {
     "timeout": 0.05,
     "serverError": 0.03,
     "networkError": 0.02
   }
 }
-````
+```
 
 ## How Probability Works
 
-  * `globalErrorRate`: The overall chance (0.0 to 1.0) that a request will fail. Here, **10%** of all requests will trigger a chaos event.
-  * `scenarios`: Defines *how* it fails.
-      * **timeout**: The request hangs indefinitely or takes exceedingly long (simulates dropped packets).
-      * **serverError**: Returns `500 Internal Server Error`.
-      * **networkError**: abruptly closes the connection.
+- `globalErrorRate`: The overall chance (0.0 to 1.0) that a request will fail. Here, **10%** of all requests will trigger a chaos event.
+- `scenarios`: Defines _how_ it fails.
+  - **timeout**: The request hangs indefinitely or takes exceedingly long (simulates dropped packets).
+  - **serverError**: Returns `500 Internal Server Error`.
+  - **networkError**: abruptly closes the connection.
 
 ## Resource-Level Overrides
 

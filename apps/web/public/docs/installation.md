@@ -10,7 +10,7 @@ Installing globally allows you to use the `mockserver` command in any directory 
 npm install -g mockserver-cli
 # or
 pnpm add -g mockserver-cli
-````
+```
 
 ## Local Installation
 

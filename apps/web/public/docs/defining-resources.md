@@ -13,12 +13,12 @@ Resources map a URL endpoint to a generated data structure.
   "count": 50,
   "fields": { ... }
 }
-````
+```
 
-  * **id**: Unique internal identifier.
-  * **endpoint**: The URL path. Supports parameters like `/api/users/:id`.
-  * **method**: HTTP method (GET, POST, etc).
-  * **count**: How many items to generate in the array.
+- **id**: Unique internal identifier.
+- **endpoint**: The URL path. Supports parameters like `/api/users/:id`.
+- **method**: HTTP method (GET, POST, etc).
+- **count**: How many items to generate in the array.
 
 ## Dynamic Routes
 
@@ -28,7 +28,7 @@ For detail views, use the `:param` syntax:
 {
   "id": "user-detail",
   "endpoint": "/api/users/:id",
-  "count": 1, 
+  "count": 1,
   "fields": {
     "id": "uuid",
     "username": "username"

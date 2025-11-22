@@ -1,6 +1,6 @@
 {
-  "name": "mockserver",
-  "version": "0.0.1",
+  "name": "mockserver-cli",
+  "version": "1.0.0",
   "description": "create mock server on the go from ui or json schema",
   "bin": {
     "mockserver": "./dist/cli.js"
@@ -10,7 +10,7 @@
     "build": "../../node_modules/.pnpm/typescript@5.9.3/node_modules/typescript/bin/tsc",
     "dev": "tsx src/cli.ts start",
     "start": "tsx src/cli.ts",
-    "lint": "eslint src --ext .ts",
+    "lint": "eslint .",
     "format": "prettier --write \"src/**/*.ts\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -32,7 +32,7 @@
     "type": "git",
     "url": "git+https://github.com/himasnhu-at/mockserver.git"
   },
-  "license": "ISC",
+  "license": "BSD-3-Clause",
   "author": {
     "name": "Himanshu",
     "email": "hyattherate2005@gmail.com",
@@ -44,6 +44,9 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.5",
     "@types/node": "^20",
+    "@typescript-eslint/eslint-plugin": "^8.47.0",
+    "@typescript-eslint/parser": "^8.47.0",
+    "eslint": "^9",
     "i": "^0.3.7",
     "npm": "^11.6.2",
     "tsx": "^4.20.6"

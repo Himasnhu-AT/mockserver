@@ -1,11 +1,39 @@
 {
   "name": "mockserver-monorepo",
+  "version": "1.0.0",
+  "description": "create mock server on the go from ui or json schema",
+  "type": "module",
   "private": true,
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "d": "tsc && node dist/deploy.js"
+  },
+  "license": "BSD-3-Clause",
+  "author": {
+    "name": "Himanshu",
+    "email": "hyattherate2005@gmail.com",
+    "url": "https://himanshuat.com"
+  },
+  "keywords": [
+    "mock",
+    "server",
+    "api",
+    "testing",
+    "chaos",
+    "engineering",
+    "frontend",
+    "development"
+  ],
+  "homepage": "https://github.com/himasnhu-at/mockserver#readme",
+  "bugs": {
+    "url": "https://github.com/himasnhu-at/mockserver/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/himasnhu-at/mockserver.git"
   },
   "packageManager": "pnpm@9.0.0",
   "engines": {
@@ -14,5 +42,10 @@
   "dependencies": {
     "prettier": "^3.6.2",
     "turbo": "^2.6.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/semver": "^7.7.1",
+    "semver": "^7.7.3"
   }
 }

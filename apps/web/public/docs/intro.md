@@ -6,12 +6,12 @@
 
 Frontend development often stalls when waiting for backend APIs to be built or when the staging environment is down. MockServer solves this by decoupling your workflow.
 
-| Feature | Description |
-| :--- | :--- |
-| ⚡️ **Instant APIs** | Define resources in JSON and get a full CRUD API with pagination, searching, and filtering instantly. |
-| 🎲 **Chaos Mode** | Test your app's resilience by simulating random timeouts, 500 errors, and network failures. |
-| 🧬 **Realistic Data** | Generate avatars, bios, dates, and nested arrays using a powerful string-based typing system. |
-| 🛠 **Zero Boilerplate** | No controllers, no services. Just run `mockserver start` and focus on your frontend. |
+| Feature                 | Description                                                                                           |
+| :---------------------- | :---------------------------------------------------------------------------------------------------- |
+| ⚡️ **Instant APIs**    | Define resources in JSON and get a full CRUD API with pagination, searching, and filtering instantly. |
+| 🎲 **Chaos Mode**       | Test your app's resilience by simulating random timeouts, 500 errors, and network failures.           |
+| 🧬 **Realistic Data**   | Generate avatars, bios, dates, and nested arrays using a powerful string-based typing system.         |
+| 🛠 **Zero Boilerplate** | No controllers, no services. Just run `mockserver start` and focus on your frontend.                  |
 
 ## How it works
 
