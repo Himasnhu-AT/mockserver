@@ -1,9 +1,9 @@
 import ora from "ora";
 import inquirer from "inquirer";
-import { SchemaManager } from "../utils/schema";
-import { logger } from "../utils/logger";
+import { SchemaManager } from "../utils/schema.js";
+import { logger } from "../utils/logger.js";
 import { CommandOptions } from "../types";
-import { templates } from "../utils/template";
+import { templates } from "../utils/template.js";
 
 export async function initCommand(options: CommandOptions) {
   const schemaManager = new SchemaManager();

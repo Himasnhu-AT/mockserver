@@ -3,13 +3,13 @@
   "version": "0.0.1",
   "description": "create mock server on the go from ui or json schema",
   "bin": {
-    "mock-chaos": "./dist/cli.js"
+    "mockserver": "./dist/cli.js"
   },
   "main": "dist/cli.js",
   "scripts": {
-    "build": "tsc",
-    "dev": "tsx src/cli.ts",
-    "start": "node dist/cli.js start",
+    "build": "../../node_modules/.pnpm/typescript@5.9.3/node_modules/typescript/bin/tsc",
+    "dev": "tsx src/cli.ts start",
+    "start": "tsx src/cli.ts",
     "lint": "eslint src --ext .ts",
     "format": "prettier --write \"src/**/*.ts\"",
     "test": "echo \"Error: no test specified\" && exit 1"

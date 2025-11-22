@@ -2,11 +2,11 @@
 
 import { Command } from "commander";
 import chalk from "chalk";
-import { startServer } from "./commands/start";
-import { initCommand } from "./commands/init";
-import { validateCommand } from "./commands/validate";
-import { infoCommand } from "./commands/info";
-import { generateCommand } from "./commands/generate";
+import { startServer } from "./commands/start.js";
+import { initCommand } from "./commands/init.js";
+import { validateCommand } from "./commands/validate.js";
+import { infoCommand } from "./commands/info.js";
+import { generateCommand } from "./commands/generate.js";
 import figlet from "figlet";
 
 const program = new Command();
@@ -14,7 +14,7 @@ const program = new Command();
 // ASCII Art Banner
 console.log(
   chalk.cyan(
-    figlet.textSync("MockChaos", {
+    figlet.textSync("MockServer", {
       font: "Standard",
       horizontalLayout: "default",
     }),
@@ -24,7 +24,7 @@ console.log(
 console.log(chalk.gray("  Dynamic Mock Server with Chaos Engineering\n"));
 
 program
-  .name("mock-chaos")
+  .name("mockserver")
   .description("Spin up mock servers instantly with chaos capabilities")
   .version("1.0.0");
 
@@ -62,9 +62,32 @@ program
   .option("-o, --output <dir>", "Output directory", "./mock-data")
   .action(generateCommand);
 
+// --- NEW CODE START ---
+// Append detailed command options to the global help
+program.addHelpText("after", () => {
+  let helpText = `\n${chalk.bold.cyan("COMMAND DETAILS:")}\n`;
+
+  program.commands.forEach((cmd) => {
+    helpText += `\n  ${chalk.yellow.bold(cmd.name())} ${chalk.gray(cmd.description())}\n`;
+
+    if (cmd.options.length > 0) {
+      cmd.options.forEach((option) => {
+        // Pad flags so descriptions align nicely
+        const flags = option.flags.padEnd(25);
+        helpText += `    ${chalk.green(flags)} ${option.description}\n`;
+      });
+    } else {
+      helpText += `    ${chalk.gray("No specific options")}\n`;
+    }
+  });
+
+  return helpText;
+});
+// --- NEW CODE END ---
+
 program.parse(process.argv);
 
 // Show help if no command provided
 if (!process.argv.slice(2).length) {
-  program.outputHelp();
+  program.help(); // .help() automatically calls outputHelp() and exits
 }

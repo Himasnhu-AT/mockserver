@@ -1,7 +1,7 @@
 import ora from "ora";
-import { SchemaManager } from "../utils/schema";
-import { MockServer } from "../core/server";
-import { logger } from "../utils/logger";
+import { SchemaManager } from "../utils/schema.js";
+import { MockServer } from "../core/server.js";
+import { logger } from "../utils/logger.js";
 import * as fs from "fs";
 import { CommandOptions } from "../types";
 
@@ -40,7 +40,11 @@ export async function startServer(options: CommandOptions) {
 
     spinner.text = "Starting server...";
     await server.start();
-    spinner.succeed("Server started successfully");
+    spinner.succeed("Server started successfully\n");
+    logger.info(`Visit docs at: http://${schema.host}:${schema.port}/docs`);
+    logger.info(
+      `Visit dashboard at: https://mockserver.himanshuat.com/schemabuilder?url=http://${schema.host}:${schema.port}`,
+    );
 
     // Display info
     logger.banner(schema.port, schema.host, schema.resources.length);

@@ -16,8 +16,6 @@ import { CodeBlock } from "@/component/CodeBlock";
 import { FeatureCard } from "@/component/FeatureCard";
 import { ChaosSimulator } from "@/component/chaosSimulator";
 
-// --- Components ---
-
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[#F5F5F7] font-sans text-slate-900 selection:bg-blue-100 selection:text-blue-900 overflow-x-hidden">
@@ -28,16 +26,23 @@ export default function LandingPage() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[140%] h-[800px] bg-linear-to-b from-white to-[#F5F5F7] rounded-b-[50%] -z-10 shadow-sm" />
         <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-blue-400/10 blur-[100px] rounded-full -z-10 pointer-events-none" />
 
-        <div className="max-w-7xl mx-auto px-6 text-center z-10">
-          <motion.div
+        <div className="max-w-7xl mx-auto px-6 text-center z-10 ">
+          <div className="inline-flex text-x items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-gray-200 shadow-sm text-slate-600  font-semibold mb-8 hover:border-blue-200 hover:text-blue-600 transition-colors cursor-default">
+            <span className="relative flex h-3 w-3">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-indigo-500"></span>
+            </span>
+            v0.1-beta live
+          </div>
+          {/*<motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-gray-200 shadow-sm text-slate-600 text-xs font-semibold mb-8 hover:border-blue-200 hover:text-blue-600 transition-colors cursor-default"
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+            <span className="w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse" />
             v0.1-beta live
-          </motion.div>
+          </motion.div>*/}
 
           <motion.h1
             initial={{ opacity: 0, y: 20 }}

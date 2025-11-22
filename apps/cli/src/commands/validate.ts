@@ -1,6 +1,6 @@
 import ora from "ora";
-import { SchemaManager } from "../utils/schema";
-import { logger } from "../utils/logger";
+import { SchemaManager } from "../utils/schema.js";
+import { logger } from "../utils/logger.js";
 import { CommandOptions } from "../types";
 
 export function validateCommand(options: CommandOptions) {

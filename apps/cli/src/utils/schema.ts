@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import { Schema } from "../types";
-import { logger } from "./logger";
+import { logger } from "./logger.js";
 
 export class SchemaManager {
   private schemaPath: string;

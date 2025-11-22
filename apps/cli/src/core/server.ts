@@ -3,9 +3,10 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import { Server } from "http";
 import { Schema } from "../types";
-import { dataGenerator } from "./generator";
-import { ChaosEngine } from "./chaos";
-import { logger } from "../utils/logger";
+import { dataGenerator } from "./generator.js";
+import { ChaosEngine } from "./chaos.js";
+import { logger } from "../utils/logger.js";
+import { generateDocsHtml } from "../utils/docsTemplate.js";
 
 export class MockServer {
   private app: express.Application;
@@ -26,7 +27,11 @@ export class MockServer {
     if (this.schema.cors?.enabled) {
       this.app.use(
         cors({
-          origin: this.schema.cors.origins,
+          origin: [
+            ...this.schema.cors.origins,
+            "https://mockserver.himanshuat.com",
+            "http://localhost:3000",
+          ],
         }),
       );
     }
@@ -67,6 +72,11 @@ export class MockServer {
 
     this.app.get("/_system/schema", (req, res) => {
       res.json(this.schema);
+    });
+
+    this.app.get("/docs", (req, res) => {
+      const html = generateDocsHtml(this.schema);
+      res.send(html);
     });
 
     // Dynamic resource routes

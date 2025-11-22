@@ -1,9 +1,9 @@
 import ora from "ora";
 import * as fs from "fs";
 import path from "path";
-import { SchemaManager } from "../utils/schema";
-import { dataGenerator } from "../core/generator";
-import { logger } from "../utils/logger";
+import { SchemaManager } from "../utils/schema.js";
+import { dataGenerator } from "../core/generator.js";
+import { logger } from "../utils/logger.js";
 import { CommandOptions } from "../types";
 
 export function generateCommand(options: CommandOptions) {

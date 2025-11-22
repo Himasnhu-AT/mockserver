@@ -18,10 +18,10 @@ export const Navbar = () => (
         </span>
       </div>
       <div className="hidden md:flex gap-8 text-sm font-medium text-slate-500">
-        <a href="#docs" className="hover:text-blue-600 transition-colors">
-          changelog
+        <a href="changelog" className="hover:text-blue-600 transition-colors">
+          Changelog
         </a>
-        <a href="#docs" className="hover:text-blue-600 transition-colors">
+        <a href="docs" className="hover:text-blue-600 transition-colors">
           Documentation
         </a>
         <a

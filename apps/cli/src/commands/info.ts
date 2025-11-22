@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import { SchemaManager } from "../utils/schema";
+import { SchemaManager } from "../utils/schema.js";
 import Table from "cli-table3";
 
 export function infoCommand() {
