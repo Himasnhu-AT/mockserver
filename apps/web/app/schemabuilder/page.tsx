@@ -14,6 +14,9 @@ import {
   Activity,
   Clock,
   Shield,
+  WifiOff, // Imported for the error screen
+  RefreshCw, // Imported for the retry button
+  Globe, // Imported for the network permission icon
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -113,6 +116,7 @@ export default function SchemaBuilder() {
 
   const [selectedResId, setSelectedResId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [connectionError, setConnectionError] = useState(false); // New state for error handling
   const [activeTab, setActiveTab] = useState<"design" | "test">("design");
   const [testResponse, setTestResponse] = useState<any>(null);
   const [saving, setSaving] = useState(false);
@@ -126,15 +130,30 @@ export default function SchemaBuilder() {
       ? `http://${new URLSearchParams(window.location.search).get("host") || "localhost:9500"}`
       : "http://localhost:9500";
 
-  useEffect(() => {
+  // Extracted fetch logic to allow retries
+  const fetchSchema = () => {
+    setLoading(true);
+    setConnectionError(false);
+
     fetch(`${API_URL}/_system/schema`)
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error("Network response was not ok");
+        return res.json();
+      })
       .then((data) => {
         setSchema(data);
         if (data.resources.length > 0) setSelectedResId(data.resources[0].id);
         setLoading(false);
       })
-      .catch((err) => console.error("CLI not running", err));
+      .catch((err) => {
+        console.error("CLI not running or blocked", err);
+        // Keep loading true to show the Error UI instead of the main app
+        setConnectionError(true);
+      });
+  };
+
+  useEffect(() => {
+    fetchSchema();
   }, [API_URL]);
 
   const handleSave = async () => {
@@ -149,7 +168,7 @@ export default function SchemaBuilder() {
       setTimeout(() => setSaving(false), 600);
     } catch (e) {
       setSaving(false);
-      alert("Failed to save");
+      alert("Failed to save. Check console.");
     }
   };
 
@@ -178,12 +197,59 @@ export default function SchemaBuilder() {
 
   const selectedResource = schema.resources.find((r) => r.id === selectedResId);
 
-  if (loading)
+  // UPDATED LOADING & ERROR UI
+  if (loading) {
+    if (connectionError) {
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+          <div className="bg-white max-w-md w-full p-8 rounded-2xl shadow-xl text-center border border-red-100">
+            <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
+              <WifiOff className="text-red-500" size={32} />
+            </div>
+            <h2 className="text-xl font-bold text-gray-900 mb-2">
+              Connection Blocked
+            </h2>
+            <p className="text-gray-600 text-sm mb-6 leading-relaxed">
+              We cannot communicate with the local server at{" "}
+              <span className="font-mono bg-gray-100 px-1 py-0.5 rounded text-gray-800">
+                {API_URL}
+              </span>
+              .
+            </p>
+
+            <div className="bg-amber-50 border border-amber-100 rounded-lg p-4 mb-6 text-left">
+              <div className="flex items-start gap-3">
+                <Globe className="text-amber-600 mt-0.5 shrink-0" size={18} />
+                <div className="text-sm text-amber-900">
+                  <p className="font-semibold mb-1">
+                    Browser Permission Required
+                  </p>
+                  <p className="opacity-90">
+                    Your browser might be blocking access to the local network.
+                    Please allow this site to access <b>Local Network</b>{" "}
+                    devices in your browser settings.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <button
+              onClick={fetchSchema}
+              className="w-full flex items-center justify-center gap-2 bg-gray-900 hover:bg-black text-white py-3 rounded-xl font-medium transition-all active:scale-95"
+            >
+              <RefreshCw size={18} /> Retry Connection
+            </button>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 text-gray-400">
         <Activity className="animate-pulse mr-2" /> Connecting to CLI...
       </div>
     );
+  }
 
   return (
     <div className="min-h-screen bg-[#F5F5F7] text-slate-800 font-sans flex flex-col">
@@ -691,11 +757,38 @@ export default function SchemaBuilder() {
                               value={selectedResource.errorConfig.code}
                               className="w-20 bg-white border border-red-200 text-red-700 text-sm rounded px-2 py-1"
                               onChange={(e) => {
-                                /* Update Logic Omitted for brevity */
+                                if (!selectedResource.errorConfig) return;
+                                const updated = schema.resources.map((r) =>
+                                  r.id === selectedResource.id
+                                    ? {
+                                        ...r,
+                                        errorConfig: {
+                                          ...r.errorConfig!,
+                                          code: parseInt(e.target.value),
+                                        },
+                                      }
+                                    : r,
+                                );
+                                setSchema({ ...schema, resources: updated });
                               }}
                             />
                             <input
                               value={selectedResource.errorConfig.message}
+                              onChange={(e) => {
+                                if (!selectedResource.errorConfig) return;
+                                const updated = schema.resources.map((r) =>
+                                  r.id === selectedResource.id
+                                    ? {
+                                        ...r,
+                                        errorConfig: {
+                                          ...r.errorConfig!,
+                                          message: e.target.value,
+                                        },
+                                      }
+                                    : r,
+                                );
+                                setSchema({ ...schema, resources: updated });
+                              }}
                               className="flex-1 bg-white border border-red-200 text-red-700 text-sm rounded px-2 py-1"
                             />
                           </div>
