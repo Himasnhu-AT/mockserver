@@ -61,8 +61,8 @@ export async function initCommand(options: CommandOptions) {
 
     logger.success("\n✨ All set! Next steps:");
     logger.info("1. Edit schema.json to customize your endpoints");
-    logger.info("2. Run 'mock-chaos start' to start the server");
-    logger.info("3. Run 'mock-chaos info' to see available endpoints\n");
+    logger.info("2. Run 'mockserver start' to start the server");
+    logger.info("3. Run 'mockserver info' to see available endpoints\n");
   } catch (error: any) {
     spinner.fail("Failed to create schema");
     logger.error(error.message);

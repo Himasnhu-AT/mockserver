@@ -32,7 +32,7 @@ export default function LandingPage() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-3 w-3 bg-indigo-500"></span>
             </span>
-            v0.1-beta live
+            v1.0 live
           </div>
           {/*<motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -80,7 +80,7 @@ export default function LandingPage() {
                 className="group-hover:translate-x-1 transition-transform"
               />
             </button>
-            <CodeBlock command="npx mockserver start" />
+            <CodeBlock command="npx cli-mockserver start" />
           </motion.div>
 
           {/* Hero Terminal Mockup */}
@@ -106,7 +106,9 @@ export default function LandingPage() {
                 <div className="flex gap-2 mb-4 opacity-50">
                   <span className="text-green-400">➜</span>
                   <span className="text-blue-400">~</span>
-                  <span className="text-gray-300">npx mockserver start</span>
+                  <span className="text-gray-300">
+                    npx cli-mockserver start
+                  </span>
                 </div>
                 <motion.div
                   initial="hidden"

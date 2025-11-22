@@ -2,15 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import {
-  Calendar,
-  Zap,
-  Bug,
-  Sparkles,
-  TrendingUp,
-  GitCommit,
-  Tag,
-} from "lucide-react";
+import { Calendar, Zap, Bug, Sparkles, TrendingUp, Tag } from "lucide-react";
 import { Navbar } from "@/component/NavBar";
 import Link from "next/link";
 
@@ -31,10 +23,10 @@ interface Release {
 
 const CHANGELOG_DATA: Release[] = [
   {
-    version: "v0.1.0",
+    version: "v1.0.0",
     date: "November 22, 2025",
     isMajor: true,
-    hash: "abc123",
+    hash: "v1.0.0", // Linking to Tag instead of commit hash
     changes: [
       {
         type: "new",

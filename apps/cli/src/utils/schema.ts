@@ -14,7 +14,7 @@ export class SchemaManager {
     try {
       if (!fs.existsSync(this.schemaPath)) {
         logger.error(`Schema file not found: ${this.schemaPath}`);
-        logger.info("Run 'mock-chaos init' to create a new schema");
+        logger.info("Run 'mockserver init' to create a new schema");
         return null;
       }
 

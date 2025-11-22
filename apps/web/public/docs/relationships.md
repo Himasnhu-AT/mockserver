@@ -20,7 +20,7 @@ You can define a field as a raw JSON object to create nested structures.
     "shares": "integer:0:500"
   }
 }
-````
+```
 
 ## Arrays of Objects
 
@@ -37,4 +37,4 @@ However, for simple arrays of primitives, you can use the `array` type:
 
 In `v0.1`, relationships are simulated structurally. If you need strict foreign key integrity (e.g., `userId` in a Post strictly matching an `id` in Users), you currently need to rely on the generated UUIDs.
 
-*Future versions (v0.2+) will include strict relationship mapping.*
+_Future versions (v0.2+) will include strict relationship mapping._

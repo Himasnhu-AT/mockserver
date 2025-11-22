@@ -21,15 +21,15 @@ A minimal configuration looks like this:
   },
   "resources": []
 }
-````
+```
 
 ## Global Settings
 
-| Setting | Type | Description |
-| :--- | :--- | :--- |
-| `port` | number | The port the server listens on. |
-| `host` | string | usually "localhost" or "0.0.0.0". |
-| `delay` | object | Simulates global network latency. |
+| Setting   | Type   | Description                         |
+| :-------- | :----- | :---------------------------------- |
+| `port`    | number | The port the server listens on.     |
+| `host`    | string | usually "localhost" or "0.0.0.0".   |
+| `delay`   | object | Simulates global network latency.   |
 | `logging` | object | Controls terminal output verbosity. |
 
 ## Logging Config

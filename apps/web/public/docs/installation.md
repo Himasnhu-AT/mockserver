@@ -7,10 +7,10 @@ MockServer is built on Node.js. Ensure you have Node.js 18+ installed on your ma
 Installing globally allows you to use the `mockserver` command in any directory on your machine.
 
 ```bash
-npm install -g mockserver-cli
+npm install -g cli-mockserver
 # or
-pnpm add -g mockserver-cli
-````
+pnpm add -g cli-mockserver
+```
 
 ## Local Installation
 

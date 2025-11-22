@@ -15,15 +15,8 @@ import {
   Clock,
   Shield,
 } from "lucide-react";
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
+import { cn } from "@/lib/utils";
 
-// --- Utility for Tailwind Classes ---
-function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
-
-// --- TYPES (Updated to match your latest Schema) ---
 export type FieldType = string;
 
 export interface ErrorConfig {
@@ -68,9 +61,6 @@ export interface Schema {
   auth?: AuthConfig;
   resources: Resource[];
 }
-
-// --- COMPONENTS ---
-
 const Toggle = ({
   checked,
   onChange,
@@ -111,8 +101,6 @@ const Card = ({ children, className, title, action }: any) => (
   </div>
 );
 
-// --- MAIN APPLICATION ---
-
 export default function SchemaBuilder() {
   const [schema, setSchema] = useState<Schema>({
     port: 0,
@@ -147,7 +135,7 @@ export default function SchemaBuilder() {
         setLoading(false);
       })
       .catch((err) => console.error("CLI not running", err));
-  }, []);
+  }, [API_URL]);
 
   const handleSave = async () => {
     setSaving(true);

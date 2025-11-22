@@ -11,7 +11,7 @@ If your frontend runs on port 3000 and MockServer runs on 9500, you must enable 
   "enabled": true,
   "origins": ["http://localhost:3000", "http://localhost:5173"]
 }
-````
+```
 
 Use `"*"` in origins to allow all connections.
 
@@ -27,8 +27,8 @@ You can simulate protected routes. When enabled, MockServer checks for an `Autho
 }
 ```
 
-  * **type**: Currently supports `bearer` (standard JWT pattern).
-  * **tokens**: An array of valid strings. Any token not in this list will be rejected.
+- **type**: Currently supports `bearer` (standard JWT pattern).
+- **tokens**: An array of valid strings. Any token not in this list will be rejected.
 
 ## Global Delay
 
