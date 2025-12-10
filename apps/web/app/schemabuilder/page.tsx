@@ -17,7 +17,9 @@ import {
   WifiOff, // Imported for the error screen
   RefreshCw, // Imported for the retry button
   Globe, // Imported for the network permission icon
+  Database, // Imported for Data tab
 } from "lucide-react";
+import { DataBrowser } from "@/component/DataBrowser";
 import { cn } from "@/lib/utils";
 
 export type FieldType = string;
@@ -117,7 +119,7 @@ export default function SchemaBuilder() {
   const [selectedResId, setSelectedResId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [connectionError, setConnectionError] = useState(false); // New state for error handling
-  const [activeTab, setActiveTab] = useState<"design" | "test">("design");
+  const [activeTab, setActiveTab] = useState<"design" | "test" | "data">("design");
   const [testResponse, setTestResponse] = useState<any>(null);
   const [saving, setSaving] = useState(false);
 
@@ -135,7 +137,7 @@ export default function SchemaBuilder() {
     setLoading(true);
     setConnectionError(false);
 
-    fetch(`${API_URL}/_system/schema`)
+    fetch(`${API_URL}/_mockserver/schema`)
       .then((res) => {
         if (!res.ok) throw new Error("Network response was not ok");
         return res.json();
@@ -159,8 +161,8 @@ export default function SchemaBuilder() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      await fetch(`${API_URL}/_system/schema`, {
-        method: "POST",
+      await fetch(`${API_URL}/_mockserver/schema`, {
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(schema),
       });
@@ -540,6 +542,19 @@ export default function SchemaBuilder() {
                   >
                     Test <Play size={12} fill="currentColor" />
                   </button>
+                  <button
+                    onClick={() => {
+                      setActiveTab("data");
+                    }}
+                    className={cn(
+                      "px-4 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-2",
+                      activeTab === "data"
+                        ? "bg-white shadow text-gray-900"
+                        : "text-gray-500 hover:text-gray-700",
+                    )}
+                  >
+                    Data <Database size={12} fill="currentColor" className="opacity-50" />
+                  </button>
                 </div>
               </div>
 
@@ -675,11 +690,11 @@ export default function SchemaBuilder() {
                             const updated = schema.resources.map((r) =>
                               r.id === selectedResource.id
                                 ? {
-                                    ...r,
-                                    pagination: v
-                                      ? { enabled: true, pageSize: 10 }
-                                      : undefined,
-                                  }
+                                  ...r,
+                                  pagination: v
+                                    ? { enabled: true, pageSize: 10 }
+                                    : undefined,
+                                }
                                 : r,
                             );
                             setSchema({ ...schema, resources: updated });
@@ -700,15 +715,15 @@ export default function SchemaBuilder() {
                             const updated = schema.resources.map((r) =>
                               r.id === selectedResource.id
                                 ? {
-                                    ...r,
-                                    errorConfig: v
-                                      ? {
-                                          rate: 0.1,
-                                          code: 500,
-                                          message: "Server Error",
-                                        }
-                                      : undefined,
-                                  }
+                                  ...r,
+                                  errorConfig: v
+                                    ? {
+                                      rate: 0.1,
+                                      code: 500,
+                                      message: "Server Error",
+                                    }
+                                    : undefined,
+                                }
                                 : r,
                             );
                             setSchema({ ...schema, resources: updated });
@@ -738,12 +753,12 @@ export default function SchemaBuilder() {
                                 const updated = schema.resources.map((r) =>
                                   r.id === selectedResource.id
                                     ? {
-                                        ...r,
-                                        errorConfig: {
-                                          ...r.errorConfig!,
-                                          rate: parseFloat(e.target.value),
-                                        },
-                                      }
+                                      ...r,
+                                      errorConfig: {
+                                        ...r.errorConfig!,
+                                        rate: parseFloat(e.target.value),
+                                      },
+                                    }
                                     : r,
                                 );
                                 setSchema({ ...schema, resources: updated });
@@ -761,12 +776,12 @@ export default function SchemaBuilder() {
                                 const updated = schema.resources.map((r) =>
                                   r.id === selectedResource.id
                                     ? {
-                                        ...r,
-                                        errorConfig: {
-                                          ...r.errorConfig!,
-                                          code: parseInt(e.target.value),
-                                        },
-                                      }
+                                      ...r,
+                                      errorConfig: {
+                                        ...r.errorConfig!,
+                                        code: parseInt(e.target.value),
+                                      },
+                                    }
                                     : r,
                                 );
                                 setSchema({ ...schema, resources: updated });
@@ -779,12 +794,12 @@ export default function SchemaBuilder() {
                                 const updated = schema.resources.map((r) =>
                                   r.id === selectedResource.id
                                     ? {
-                                        ...r,
-                                        errorConfig: {
-                                          ...r.errorConfig!,
-                                          message: e.target.value,
-                                        },
-                                      }
+                                      ...r,
+                                      errorConfig: {
+                                        ...r.errorConfig!,
+                                        message: e.target.value,
+                                      },
+                                    }
                                     : r,
                                 );
                                 setSchema({ ...schema, resources: updated });
@@ -797,44 +812,53 @@ export default function SchemaBuilder() {
                     </Card>
                   </div>
 
+
                   <div className="text-center pt-8">
-                    <button
-                      onClick={() => {
-                        const res = schema.resources.filter(
-                          (r) => r.id !== selectedResource.id,
-                        );
-                        setSchema({ ...schema, resources: res });
-                        setSelectedResId(res[0]?.id || null);
-                      }}
-                      className="text-red-400 hover:text-red-600 text-sm font-medium flex items-center gap-2 mx-auto transition-colors"
-                    >
-                      <Trash2 size={14} /> Delete Resource
-                    </button>
+                    {/* ... footer or saving status ... */}
                   </div>
                 </>
-              ) : (
-                <div className="h-[600px] flex flex-col">
-                  {/* Test Interface */}
-                  <Card className="flex-1 flex flex-col p-0">
-                    <div className="bg-gray-900 text-gray-400 text-xs p-3 font-mono border-b border-gray-800 flex justify-between">
-                      <span>
-                        {selectedResource.method} {selectedResource.endpoint}
-                      </span>
-                      <span className="text-green-400">
-                        STATUS: {testResponse ? "200 OK" : "READY"}
-                      </span>
-                    </div>
-                    <div className="flex-1 bg-[#1e1e1e] p-4 overflow-auto">
-                      <pre className="font-mono text-xs text-blue-300">
-                        {testResponse
-                          ? JSON.stringify(testResponse, null, 2)
-                          : "// Click 'Test' in the top right to execute this endpoint."}
-                      </pre>
-                    </div>
-                  </Card>
+              ) : activeTab === "test" ? (
+                // Test Tab (simplified placeholder or existing logic if I had view of it, assuming I insert after Design block end)
+                <div className="p-6 bg-white rounded-2xl border border-gray-100 shadow-sm min-h-[400px]">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="font-semibold text-gray-900">API Response Preview</h3>
+                    <button
+                      onClick={() => runApiTest(selectedResource)}
+                      className="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded text-gray-600 font-medium"
+                    >
+                      Re-run Request
+                    </button>
+                  </div>
+                  <div className="bg-slate-900 rounded-lg p-4 font-mono text-sm overflow-x-auto">
+                    {testResponse === "Loading..." ? (
+                      <div className="text-gray-400 animate-pulse">Sending request to {selectedResource.endpoint}...</div>
+                    ) : (
+                      <pre className="text-green-400">{JSON.stringify(testResponse, null, 2)}</pre>
+                    )}
+                  </div>
                 </div>
+              ) : (
+                // Data Tab
+                <DataBrowser
+                  resourceId={selectedResource.id}
+                  fields={selectedResource.fields}
+                  apiUrl={API_URL}
+                />
               )}
+              <button
+                onClick={() => {
+                  const res = schema.resources.filter(
+                    (r) => r.id !== selectedResource.id,
+                  );
+                  setSchema({ ...schema, resources: res });
+                  setSelectedResId(res[0]?.id || null);
+                }}
+                className="text-red-400 hover:text-red-600 text-sm font-medium flex items-center gap-2 mx-auto transition-colors"
+              >
+                <Trash2 size={14} /> Delete Resource
+              </button>
             </div>
+
           ) : (
             <div className="h-full flex flex-col items-center justify-center text-gray-300">
               <Settings size={48} className="mb-4 text-gray-200" />
@@ -842,7 +866,7 @@ export default function SchemaBuilder() {
             </div>
           )}
         </main>
-      </div>
-    </div>
+      </div >
+    </div >
   );
 }
