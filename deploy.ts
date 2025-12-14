@@ -219,6 +219,7 @@ async function release() {
   if (publishAnswer.toLowerCase() === "y") {
     try {
       // --no-git-checks is often useful in CI/CD or scripts where the local tag might not be pushed yet
+      run("npm link", CLI_PATH);
       run("pnpm publish --access public --no-git-checks", CLI_PATH);
       console.log("✔ CLI published successfully.");
     } catch (e) {

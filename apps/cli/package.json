@@ -3,7 +3,7 @@
   "version": "1.3.0",
   "description": "create mock server on the go from ui or json schema",
   "bin": {
-    "mockserver": "./dist/cli.js"
+    "mockserver": "dist/cli.js"
   },
   "main": "dist/cli.js",
   "scripts": {
