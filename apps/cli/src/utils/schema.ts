@@ -7,7 +7,16 @@ export class SchemaManager {
   private schemaPath: string;
 
   constructor(customPath?: string) {
-    this.schemaPath = customPath || path.join(process.cwd(), "schema.json");
+    if (customPath) {
+      this.schemaPath = customPath;
+    } else {
+      const mockServerDir = path.join(process.cwd(), ".mockserver");
+      // Ensure .mockserver directory exists
+      if (!fs.existsSync(mockServerDir)) {
+        fs.mkdirSync(mockServerDir, { recursive: true });
+      }
+      this.schemaPath = path.join(mockServerDir, "schema.json");
+    }
   }
 
   load(): Schema | null {

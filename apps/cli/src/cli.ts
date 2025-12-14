@@ -8,6 +8,7 @@ import { validateCommand } from "./commands/validate.js";
 import { infoCommand } from "./commands/info.js";
 import { generateCommand } from "./commands/generate.js";
 import figlet from "figlet";
+import { logger } from "./utils/logger.js";
 
 const program = new Command();
 
@@ -26,7 +27,20 @@ console.log(chalk.gray("  Dynamic Mock Server with Chaos Engineering\n"));
 program
   .name("mockserver")
   .description("Spin up mock servers instantly with chaos capabilities")
-  .version("1.0.0");
+  .version("1.0.0")
+  .option("-v, --verbose", "Enable verbose logging");
+
+// Middleware to handle global options
+program.hook("preAction", (thisCommand) => {
+  const opts = thisCommand.opts();
+  if (opts.verbose) {
+    // We imported 'logger' from './utils/logger.js', so we can assume it's the singleton
+    // But we need to import it here to set it, or rely on commands doing it?
+    // Better to strict import here
+    logger.enableDebug();
+    logger.debug("Verbose mode enabled");
+  }
+});
 
 // Commands
 program

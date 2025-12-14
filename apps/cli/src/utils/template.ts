@@ -119,9 +119,83 @@ const basicTemplate: Schema = {
   ],
 };
 
+const defaultTemplate: Schema = {
+  port: 9500,
+  host: "localhost",
+  delay: { enabled: false, min: 100, max: 1000 },
+  chaos: { enabled: true, globalErrorRate: 0.01 },
+  auth: {
+    enabled: true,
+    type: "bearer",
+    tokens: ["mock-token-123", "admin-token-456"],
+  },
+  cors: { enabled: true, origins: ["*"] },
+  logging: { level: "info", format: "pretty", requests: true },
+  resources: [
+    {
+      id: "users",
+      name: "Users",
+      endpoint: "/api/users",
+      method: "GET",
+      count: 20,
+      pagination: { enabled: true, pageSize: 10 },
+      fields: {
+        id: "uuid",
+        username: "username",
+        email: "email",
+        password: "password", // Simulated password field
+        role: "enum:user,admin,guest",
+        firstName: "firstName",
+        lastName: "lastName",
+        avatar: "avatar",
+        isActive: "boolean",
+        createdAt: "date:past",
+      },
+    },
+    {
+      id: "auth-me",
+      name: "Current User",
+      endpoint: "/api/auth/me",
+      method: "GET",
+      count: 1,
+      fields: {
+        id: "uuid",
+        username: "username",
+        email: "email",
+        role: "enum:user,admin",
+        permissions: "array:word:2:5",
+      },
+      errorConfig: {
+        rate: 0,
+        code: 401,
+        message: "Unauthorized",
+      },
+    },
+    {
+      id: "posts",
+      name: "Posts",
+      endpoint: "/api/posts",
+      method: "GET",
+      count: 50,
+      pagination: { enabled: true, pageSize: 10 },
+      fields: {
+        id: "uuid",
+        authorId: "uuid",
+        title: "sentence",
+        content: "paragraph",
+        published: "boolean",
+        tags: "array:word:1:3",
+        createdAt: "date:recent",
+      },
+    },
+  ],
+};
+
 export const templates = {
   get(name: string): Schema | null {
     switch (name) {
+      case "default":
+        return defaultTemplate;
       case "social":
         return socialTemplate;
       case "ecommerce":
@@ -129,6 +203,8 @@ export const templates = {
       case "basic":
         return basicTemplate;
       default:
+        // Default to defaultTemplate if name is not found, or strict check?
+        // Let's keep it strict for now but 'default' is the fallback key.
         return null;
     }
   },

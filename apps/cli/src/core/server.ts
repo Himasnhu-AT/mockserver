@@ -58,6 +58,40 @@ export class MockServer {
       });
     }
 
+    // Authentication
+    if (this.schema.auth?.enabled) {
+      this.app.use((req: Request, res: Response, next: NextFunction) => {
+        // Skip auth for system routes and docs
+        if (
+          req.path.startsWith("/_mockserver") ||
+          req.path.startsWith("/_system") ||
+          req.path === "/docs"
+        ) {
+          return next();
+        }
+
+        const authHeader = req.headers.authorization;
+        const type = this.schema.auth?.type || "bearer";
+        const tokens = this.schema.auth?.tokens || [];
+
+        if (!authHeader) {
+          return res.status(401).json({ error: "Missing authorization header" });
+        }
+
+        const [scheme, token] = authHeader.split(" ");
+
+        if (scheme.toLowerCase() !== type.toLowerCase()) {
+          return res.status(401).json({ error: `Invalid authentication type. Expected ${type}` });
+        }
+
+        if (tokens.length > 0 && !tokens.includes(token)) {
+          return res.status(403).json({ error: "Invalid token" });
+        }
+
+        next();
+      });
+    }
+
     // Delay middleware
     if (this.schema.delay?.enabled) {
       this.app.use(async (req: Request, res: Response, next: NextFunction) => {

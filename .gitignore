@@ -4,3 +4,4 @@ dist
 .turbo
 *.js
 !next-sitemap.config.js
+.mockserver

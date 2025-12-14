@@ -1,7 +1,7 @@
 {
   "name": "@mockserver/web",
   "description": "create mock server on the go from ui or json schema",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "private": true,
   "scripts": {
     "dev": "next dev",

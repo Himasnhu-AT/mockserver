@@ -1,0 +1,260 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "MockServer Schema",
+    "description": "Configuration schema for MockServer",
+    "type": "object",
+    "required": [
+        "port",
+        "host",
+        "resources",
+        "chaos"
+    ],
+    "properties": {
+        "port": {
+            "type": "integer",
+            "description": "Port number to run the server on",
+            "minimum": 1,
+            "maximum": 65535,
+            "default": 9500
+        },
+        "host": {
+            "type": "string",
+            "description": "Host address",
+            "default": "localhost"
+        },
+        "delay": {
+            "type": "object",
+            "description": "Artificial delay configuration",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "min": {
+                    "type": "integer",
+                    "description": "Minimum delay in ms"
+                },
+                "max": {
+                    "type": "integer",
+                    "description": "Maximum delay in ms"
+                }
+            },
+            "required": [
+                "enabled",
+                "min",
+                "max"
+            ]
+        },
+        "chaos": {
+            "type": "object",
+            "description": "Chaos engineering configuration",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "globalErrorRate": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1,
+                    "description": "Probability of error (0-1)"
+                },
+                "scenarios": {
+                    "type": "object",
+                    "properties": {
+                        "timeout": {
+                            "type": "number"
+                        },
+                        "serverError": {
+                            "type": "number"
+                        },
+                        "networkError": {
+                            "type": "number"
+                        }
+                    }
+                }
+            },
+            "required": [
+                "enabled",
+                "globalErrorRate"
+            ]
+        },
+        "auth": {
+            "type": "object",
+            "description": "Authentication configuration",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "bearer",
+                        "basic",
+                        "apikey"
+                    ]
+                },
+                "tokens": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "List of valid tokens"
+                }
+            },
+            "required": [
+                "enabled",
+                "type"
+            ]
+        },
+        "cors": {
+            "type": "object",
+            "description": "CORS configuration",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "origins": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "required": [
+                "enabled",
+                "origins"
+            ]
+        },
+        "logging": {
+            "type": "object",
+            "description": "Logging configuration",
+            "properties": {
+                "level": {
+                    "type": "string",
+                    "enum": [
+                        "debug",
+                        "info",
+                        "warn",
+                        "error"
+                    ]
+                },
+                "format": {
+                    "type": "string",
+                    "enum": [
+                        "pretty",
+                        "json"
+                    ]
+                },
+                "requests": {
+                    "type": "boolean"
+                }
+            },
+            "required": [
+                "level",
+                "format",
+                "requests"
+            ]
+        },
+        "resources": {
+            "type": "array",
+            "description": "List of mock resources/endpoints",
+            "items": {
+                "type": "object",
+                "required": [
+                    "id",
+                    "name",
+                    "endpoint",
+                    "method",
+                    "count",
+                    "fields"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "endpoint": {
+                        "type": "string"
+                    },
+                    "method": {
+                        "type": "string",
+                        "enum": [
+                            "GET",
+                            "POST",
+                            "PUT",
+                            "PATCH",
+                            "DELETE"
+                        ]
+                    },
+                    "count": {
+                        "type": "integer",
+                        "minimum": 0
+                    },
+                    "fields": {
+                        "type": "object",
+                        "description": "Field definitions",
+                        "additionalProperties": {
+                            "oneOf": [
+                                {
+                                    "type": "string",
+                                    "description": "Type string (e.g., 'uuid', 'email') or complex type ('enum:a,b', 'integer:1:10')"
+                                },
+                                {
+                                    "type": "object",
+                                    "description": "Nested object"
+                                },
+                                {
+                                    "type": "array",
+                                    "description": "Array"
+                                },
+                                {
+                                    "type": "boolean",
+                                    "description": "Boolean"
+                                },
+                                {
+                                    "type": "number",
+                                    "description": "Number"
+                                }
+                            ]
+                        }
+                    },
+                    "errorConfig": {
+                        "type": "object",
+                        "properties": {
+                            "rate": {
+                                "type": "number"
+                            },
+                            "code": {
+                                "type": "integer"
+                            },
+                            "message": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "rate",
+                            "code",
+                            "message"
+                        ]
+                    },
+                    "pagination": {
+                        "type": "object",
+                        "properties": {
+                            "enabled": {
+                                "type": "boolean"
+                            },
+                            "pageSize": {
+                                "type": "integer"
+                            }
+                        },
+                        "required": [
+                            "enabled",
+                            "pageSize"
+                        ]
+                    }
+                }
+            }
+        }
+    }
+}

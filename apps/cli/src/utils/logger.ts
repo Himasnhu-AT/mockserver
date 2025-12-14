@@ -3,6 +3,17 @@ import { Request, Response } from "express";
 
 export class Logger {
   private requestCount = 0;
+  private debugMode = false;
+
+  enableDebug() {
+    this.debugMode = true;
+  }
+
+  debug(message: string) {
+    if (this.debugMode) {
+      console.log(chalk.gray("DEBUG:"), message);
+    }
+  }
 
   success(message: string) {
     console.log(chalk.green("✓"), message);
@@ -39,8 +50,8 @@ export class Logger {
     console.log(chalk.cyan("\n╔══════════════════════════════════════════╗"));
     console.log(
       chalk.cyan("║") +
-        chalk.bold.white("    🚀 Mock Server Running              ") +
-        chalk.cyan("║"),
+      chalk.bold.white("    🚀 Mock Server Running              ") +
+      chalk.cyan("║"),
     );
     console.log(chalk.cyan("╚══════════════════════════════════════════╝\n"));
 

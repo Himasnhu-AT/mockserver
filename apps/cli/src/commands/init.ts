@@ -1,5 +1,5 @@
 import ora from "ora";
-import inquirer from "inquirer";
+import { select, confirm } from "@inquirer/prompts";
 import { SchemaManager } from "../utils/schema.js";
 import { logger } from "../utils/logger.js";
 import { CommandOptions } from "../types";
@@ -10,14 +10,10 @@ export async function initCommand(options: CommandOptions) {
 
   // Check if schema exists
   if (schemaManager.exists() && !options.force) {
-    const { overwrite } = await inquirer.prompt([
-      {
-        type: "confirm",
-        name: "overwrite",
-        message: "schema.json already exists. Overwrite?",
-        default: false,
-      },
-    ]);
+    const overwrite = await confirm({
+      message: "schema.json already exists. Overwrite?",
+      default: false,
+    });
 
     if (!overwrite) {
       logger.info("Initialization cancelled");
@@ -29,19 +25,20 @@ export async function initCommand(options: CommandOptions) {
 
   // Ask for template if not provided
   if (!template) {
-    const { selectedTemplate } = await inquirer.prompt([
-      {
-        type: "list",
-        name: "selectedTemplate",
-        message: "Choose a template:",
-        choices: [
-          { name: "📱 Social Media", value: "social" },
-          { name: "🛒 E-commerce", value: "ecommerce" },
-          { name: "📝 Basic", value: "basic" },
-        ],
-      },
-    ]);
-    template = selectedTemplate;
+    const choices = [
+      { name: "🔐 Default (Auth & Users)", value: "default" },
+      { name: "📱 Social Media", value: "social" },
+      { name: "🛒 E-commerce", value: "ecommerce" },
+      { name: "📝 Basic", value: "basic" },
+    ];
+
+    logger.debug(`Prompting for template with ${choices.length} choices`);
+
+    template = await select({
+      message: "Choose a template:",
+      choices,
+      default: "default",
+    });
   }
 
   const spinner = ora("Generating schema...").start();
