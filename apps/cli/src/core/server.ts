@@ -144,7 +144,12 @@ export class MockServer {
         await storage.saveSchema(newSchema);
         this.updateSchema(newSchema);
         res.json({ success: true, schema: newSchema });
-      } catch (error) {
+      } catch (e) {
+        if (e instanceof Error) {
+          logger.error(`ERROR:\nname:${e.name}\nmessage:${e.message}\n\n`)
+        } else {
+          logger.error(`ERROR:\n${e}\n\n`)
+        }
         res.status(500).json({ error: "Failed to save schema" });
       }
     });

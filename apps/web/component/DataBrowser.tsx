@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Trash2, Plus, RefreshCw, Save, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -14,7 +14,7 @@ export const DataBrowser = ({ resourceId, fields, apiUrl }: DataBrowserProps) =>
     const [editingItem, setEditingItem] = useState<any | null>(null);
     const [isNew, setIsNew] = useState(false);
 
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         setLoading(true);
         try {
             const res = await fetch(`${apiUrl}/_mockserver/data/${resourceId}`);
@@ -27,11 +27,11 @@ export const DataBrowser = ({ resourceId, fields, apiUrl }: DataBrowserProps) =>
         } finally {
             setLoading(false);
         }
-    };
+    }, [apiUrl, resourceId]);
 
     useEffect(() => {
         fetchData();
-    }, [resourceId, apiUrl]);
+    }, [fetchData]);
 
     const handleDelete = async (id: string) => {
         if (!confirm("Are you sure?")) return;

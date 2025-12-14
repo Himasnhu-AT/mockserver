@@ -23,6 +23,11 @@ export class StorageService {
             try {
                 await fs.access(this.schemaPath);
             } catch (e) {
+                if (e instanceof Error) {
+                    logger.error(`ERROR:\nname:${e.name}\nmessage:${e.message}\n\n`)
+                } else {
+                    logger.error(`ERROR:\n${e}\n\n`)
+                }
                 if (initialSchema) {
                     await this.saveSchema(initialSchema);
                     logger.info("Initialized new schema at " + this.schemaPath);
@@ -39,6 +44,11 @@ export class StorageService {
             const data = await fs.readFile(this.schemaPath, "utf-8");
             return JSON.parse(data);
         } catch (error) {
+            if (error instanceof Error) {
+                logger.error(`ERROR:\nname:${error.name}\nmessage:${error.message}\n\n`)
+            } else {
+                logger.error(`ERROR:\n${error}\n\n`)
+            }
             return null; // Return null if schema doesn't exist or is invalid
         }
     }
@@ -53,6 +63,11 @@ export class StorageService {
             const data = await fs.readFile(filePath, "utf-8");
             return JSON.parse(data);
         } catch (error) {
+            if (error instanceof Error) {
+                logger.error(`ERROR:\nname:${error.name}\nmessage:${error.message}\n\n`)
+            } else {
+                logger.error(`ERROR:\n${error}\n\n`)
+            }
             return [];
         }
     }
