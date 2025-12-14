@@ -23,6 +23,18 @@ interface Release {
 
 const CHANGELOG_DATA: Release[] = [
   {
+    version: "v1.3.0",
+    date: "December 14, 2025",
+    isMajor: false,
+    hash: "v1.3.0", // Linking to Tag instead of commit hash
+    changes: [
+      {
+        type: "new",
+        text: "Release v1.3.0",
+      },
+    ],
+  },
+  {
     version: "v1.0.0",
     date: "November 22, 2025",
     isMajor: true,

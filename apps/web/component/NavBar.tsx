@@ -21,7 +21,10 @@ export const Navbar = () => (
         <a href="changelog" className="hover:text-blue-600 transition-colors">
           Changelog
         </a>
-        <a href="schemabuilder" className="hover:text-blue-600 transition-colors">
+        <a
+          href="schemabuilder"
+          className="hover:text-blue-600 transition-colors"
+        >
           Dashboard
         </a>
         <a href="docs" className="hover:text-blue-600 transition-colors">

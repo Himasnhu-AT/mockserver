@@ -50,8 +50,8 @@ export class Logger {
     console.log(chalk.cyan("\n╔══════════════════════════════════════════╗"));
     console.log(
       chalk.cyan("║") +
-      chalk.bold.white("    🚀 Mock Server Running              ") +
-      chalk.cyan("║"),
+        chalk.bold.white("    🚀 Mock Server Running              ") +
+        chalk.cyan("║"),
     );
     console.log(chalk.cyan("╚══════════════════════════════════════════╝\n"));
 

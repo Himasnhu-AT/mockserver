@@ -119,7 +119,9 @@ export default function SchemaBuilder() {
   const [selectedResId, setSelectedResId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [connectionError, setConnectionError] = useState(false); // New state for error handling
-  const [activeTab, setActiveTab] = useState<"design" | "test" | "data">("design");
+  const [activeTab, setActiveTab] = useState<"design" | "test" | "data">(
+    "design",
+  );
   const [testResponse, setTestResponse] = useState<any>(null);
   const [saving, setSaving] = useState(false);
 
@@ -557,7 +559,12 @@ export default function SchemaBuilder() {
                         : "text-gray-500 hover:text-gray-700",
                     )}
                   >
-                    Data <Database size={12} fill="currentColor" className="opacity-50" />
+                    Data{" "}
+                    <Database
+                      size={12}
+                      fill="currentColor"
+                      className="opacity-50"
+                    />
                   </button>
                 </div>
               </div>
@@ -694,11 +701,11 @@ export default function SchemaBuilder() {
                             const updated = schema.resources.map((r) =>
                               r.id === selectedResource.id
                                 ? {
-                                  ...r,
-                                  pagination: v
-                                    ? { enabled: true, pageSize: 10 }
-                                    : undefined,
-                                }
+                                    ...r,
+                                    pagination: v
+                                      ? { enabled: true, pageSize: 10 }
+                                      : undefined,
+                                  }
                                 : r,
                             );
                             setSchema({ ...schema, resources: updated });
@@ -719,15 +726,15 @@ export default function SchemaBuilder() {
                             const updated = schema.resources.map((r) =>
                               r.id === selectedResource.id
                                 ? {
-                                  ...r,
-                                  errorConfig: v
-                                    ? {
-                                      rate: 0.1,
-                                      code: 500,
-                                      message: "Server Error",
-                                    }
-                                    : undefined,
-                                }
+                                    ...r,
+                                    errorConfig: v
+                                      ? {
+                                          rate: 0.1,
+                                          code: 500,
+                                          message: "Server Error",
+                                        }
+                                      : undefined,
+                                  }
                                 : r,
                             );
                             setSchema({ ...schema, resources: updated });
@@ -757,12 +764,12 @@ export default function SchemaBuilder() {
                                 const updated = schema.resources.map((r) =>
                                   r.id === selectedResource.id
                                     ? {
-                                      ...r,
-                                      errorConfig: {
-                                        ...r.errorConfig!,
-                                        rate: parseFloat(e.target.value),
-                                      },
-                                    }
+                                        ...r,
+                                        errorConfig: {
+                                          ...r.errorConfig!,
+                                          rate: parseFloat(e.target.value),
+                                        },
+                                      }
                                     : r,
                                 );
                                 setSchema({ ...schema, resources: updated });
@@ -780,12 +787,12 @@ export default function SchemaBuilder() {
                                 const updated = schema.resources.map((r) =>
                                   r.id === selectedResource.id
                                     ? {
-                                      ...r,
-                                      errorConfig: {
-                                        ...r.errorConfig!,
-                                        code: parseInt(e.target.value),
-                                      },
-                                    }
+                                        ...r,
+                                        errorConfig: {
+                                          ...r.errorConfig!,
+                                          code: parseInt(e.target.value),
+                                        },
+                                      }
                                     : r,
                                 );
                                 setSchema({ ...schema, resources: updated });
@@ -798,12 +805,12 @@ export default function SchemaBuilder() {
                                 const updated = schema.resources.map((r) =>
                                   r.id === selectedResource.id
                                     ? {
-                                      ...r,
-                                      errorConfig: {
-                                        ...r.errorConfig!,
-                                        message: e.target.value,
-                                      },
-                                    }
+                                        ...r,
+                                        errorConfig: {
+                                          ...r.errorConfig!,
+                                          message: e.target.value,
+                                        },
+                                      }
                                     : r,
                                 );
                                 setSchema({ ...schema, resources: updated });
@@ -816,7 +823,6 @@ export default function SchemaBuilder() {
                     </Card>
                   </div>
 
-
                   <div className="text-center pt-8">
                     {/* ... footer or saving status ... */}
                   </div>
@@ -825,7 +831,9 @@ export default function SchemaBuilder() {
                 // Test Tab (simplified placeholder or existing logic if I had view of it, assuming I insert after Design block end)
                 <div className="p-6 bg-white rounded-2xl border border-gray-100 shadow-sm min-h-[400px]">
                   <div className="flex justify-between items-center mb-4">
-                    <h3 className="font-semibold text-gray-900">API Response Preview</h3>
+                    <h3 className="font-semibold text-gray-900">
+                      API Response Preview
+                    </h3>
                     <button
                       onClick={() => runApiTest(selectedResource)}
                       className="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded text-gray-600 font-medium"
@@ -835,9 +843,13 @@ export default function SchemaBuilder() {
                   </div>
                   <div className="bg-slate-900 rounded-lg p-4 font-mono text-sm overflow-x-auto">
                     {testResponse === "Loading..." ? (
-                      <div className="text-gray-400 animate-pulse">Sending request to {selectedResource.endpoint}...</div>
+                      <div className="text-gray-400 animate-pulse">
+                        Sending request to {selectedResource.endpoint}...
+                      </div>
                     ) : (
-                      <pre className="text-green-400">{JSON.stringify(testResponse, null, 2)}</pre>
+                      <pre className="text-green-400">
+                        {JSON.stringify(testResponse, null, 2)}
+                      </pre>
                     )}
                   </div>
                 </div>
@@ -862,7 +874,6 @@ export default function SchemaBuilder() {
                 <Trash2 size={14} /> Delete Resource
               </button>
             </div>
-
           ) : (
             <div className="h-full flex flex-col items-center justify-center text-gray-300">
               <Settings size={48} className="mb-4 text-gray-200" />
@@ -870,7 +881,7 @@ export default function SchemaBuilder() {
             </div>
           )}
         </main>
-      </div >
-    </div >
+      </div>
+    </div>
   );
 }
