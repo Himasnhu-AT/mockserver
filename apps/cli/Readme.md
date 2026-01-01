@@ -1,4 +1,4 @@
-# 🚀 MockServer
+# 🚀 MockServer CLI
 
 A powerful CLI tool to spin up mock servers instantly with built-in chaos engineering capabilities. Perfect for frontend development when backend APIs aren't ready yet.
 
@@ -31,6 +31,8 @@ npm install --save-dev cli-mockserver
 
 ```bash
 mockserver init
+# OR
+npx cli-mockserver init
 ```
 
 Choose from templates:
@@ -43,6 +45,8 @@ Choose from templates:
 
 ```bash
 mockserver start
+# OR
+npx cli-mockserver start
 ```
 
 Your mock API is now running at `http://localhost:9500`!
@@ -105,7 +109,7 @@ Options:
 
 ## 🎨 Field Types
 
-MockChaos supports 20+ field types:
+MockServer supports 20+ field types:
 
 ### Basic Types
 

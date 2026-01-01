@@ -16,6 +16,8 @@ import { CodeBlock } from "@/component/CodeBlock";
 import { FeatureCard } from "@/component/FeatureCard";
 import { ChaosSimulator } from "@/component/chaosSimulator";
 
+import Link from "next/link";
+
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[#F5F5F7] font-sans text-slate-900 selection:bg-blue-100 selection:text-blue-900 overflow-x-hidden">
@@ -27,22 +29,13 @@ export default function LandingPage() {
         <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-blue-400/10 blur-[100px] rounded-full -z-10 pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-6 text-center z-10 ">
-          <div className="inline-flex text-x items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-gray-200 shadow-sm text-slate-600  font-semibold mb-8 hover:border-blue-200 hover:text-blue-600 transition-colors cursor-default">
+          <div className="inline-flex text-sm items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-gray-200 shadow-sm text-slate-600 font-semibold mb-8 hover:border-blue-200 hover:text-blue-600 transition-colors cursor-default">
             <span className="relative flex h-3 w-3">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-3 w-3 bg-indigo-500"></span>
             </span>
-            v1.0 live
+            MockServer v1.3
           </div>
-          {/*<motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-gray-200 shadow-sm text-slate-600 text-xs font-semibold mb-8 hover:border-blue-200 hover:text-blue-600 transition-colors cursor-default"
-          >
-            <span className="w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse" />
-            v0.1-beta live
-          </motion.div>*/}
 
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
@@ -73,13 +66,16 @@ export default function LandingPage() {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-20"
           >
-            <button className="group px-8 py-4 bg-slate-900 hover:bg-black text-white rounded-full font-semibold transition-all shadow-xl hover:shadow-2xl hover:-translate-y-1 flex items-center gap-2">
+            <Link
+              href="/docs"
+              className="group px-8 py-4 bg-slate-900 hover:bg-black text-white rounded-full font-semibold transition-all shadow-xl hover:shadow-2xl hover:-translate-y-1 flex items-center gap-2"
+            >
               Get Started{" "}
               <ArrowRight
                 size={18}
                 className="group-hover:translate-x-1 transition-transform"
               />
-            </button>
+            </Link>
             <CodeBlock command="npx cli-mockserver start" />
           </motion.div>
 

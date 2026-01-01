@@ -31,7 +31,7 @@ export const Navbar = () => (
           Documentation
         </a>
         <a
-          href="#how-it-works"
+          href="https://github.com/Himasnhu-AT/mockserver"
           className="hover:text-blue-600 transition-colors"
         >
           <span className="flex">

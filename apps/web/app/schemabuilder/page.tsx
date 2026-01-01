@@ -18,6 +18,8 @@ import {
   RefreshCw, // Imported for the retry button
   Globe, // Imported for the network permission icon
   Database, // Imported for Data tab
+  Terminal,
+  ArrowRight,
 } from "lucide-react";
 import { DataBrowser } from "@/component/DataBrowser";
 import { cn } from "@/lib/utils";
@@ -209,44 +211,68 @@ export default function SchemaBuilder() {
   if (loading) {
     if (connectionError) {
       return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-          <div className="bg-white max-w-md w-full p-8 rounded-2xl shadow-xl text-center border border-red-100">
+        <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4 font-sans">
+          <div className="bg-white max-w-lg w-full p-8 rounded-2xl shadow-xl text-center border border-gray-100">
             <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
               <WifiOff className="text-red-500" size={32} />
             </div>
-            <h2 className="text-xl font-bold text-gray-900 mb-2">
-              Connection Blocked
+
+            <h2 className="text-2xl font-bold text-slate-900 mb-3 tracking-tight">
+              Unable to Connect
             </h2>
-            <p className="text-gray-600 text-sm mb-6 leading-relaxed">
-              We cannot communicate with the local server at{" "}
-              <span className="font-mono bg-gray-100 px-1 py-0.5 rounded text-gray-800">
+
+            <p className="text-slate-500 mb-8 max-w-md mx-auto leading-relaxed">
+              We can't detect the MockServer running at{" "}
+              <code className="px-1.5 py-0.5 rounded bg-gray-100 font-mono text-sm text-slate-700">
                 {API_URL}
-              </span>
-              .
+              </code>
             </p>
 
-            <div className="bg-amber-50 border border-amber-100 rounded-lg p-4 mb-6 text-left">
-              <div className="flex items-start gap-3">
-                <Globe className="text-amber-600 mt-0.5 shrink-0" size={18} />
-                <div className="text-sm text-amber-900">
-                  <p className="font-semibold mb-1">
-                    Browser Permission Required
-                  </p>
-                  <p className="opacity-90">
-                    Your browser might be blocking access to the local network.
-                    Please allow this site to access <b>Local Network</b>{" "}
-                    devices in your browser settings.
-                  </p>
-                </div>
+            <div className="bg-slate-900 rounded-xl p-4 mb-8 text-left shadow-lg overflow-hidden relative group">
+              <div className="flex items-center justify-between mb-2 opacity-50 text-xs text-white  uppercase tracking-wider font-semibold">
+                <span>Fast Start</span>
+                <Terminal size={12} />
+              </div>
+              <div className="flex items-center gap-3 font-mono text-sm text-green-400">
+                <span className="shrink-0 select-none opacity-50">$</span>
+                <span className="selection:bg-green-900">npx cli-mockserver start</span>
               </div>
             </div>
 
-            <button
-              onClick={fetchSchema}
-              className="w-full flex items-center justify-center gap-2 bg-gray-900 hover:bg-black text-white py-3 rounded-xl font-medium transition-all active:scale-95"
-            >
-              <RefreshCw size={18} /> Retry Connection
-            </button>
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={fetchSchema}
+                className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white py-3.5 rounded-xl font-semibold transition-all shadow-md hover:shadow-lg active:scale-[0.98]"
+              >
+                <RefreshCw size={18} /> Retry Connection
+              </button>
+
+              <a
+                href="/docs"
+                className="w-full flex items-center justify-center gap-2 bg-white border border-gray-200 hover:bg-gray-50 hover:border-gray-300 text-slate-700 py-3.5 rounded-xl font-medium transition-all"
+              >
+                View Setup Guide <ArrowRight size={16} className="opacity-50" />
+              </a>
+            </div>
+
+            <div className="mt-8 pt-6 border-t border-gray-100">
+              <details className="group text-left">
+                <summary className="flex items-center gap-2 text-sm text-slate-400 hover:text-slate-600 cursor-pointer font-medium list-none select-none">
+                  <Globe size={14} />
+                  <span>Troubleshoot: Browser Permissions</span>
+                  <div className="grow" />
+                  <ChevronRight size={14} className="group-open:rotate-90 transition-transform" />
+                </summary>
+
+                <div className="mt-3 text-sm text-slate-500 pl-6 leading-relaxed bg-amber-50 p-3 rounded-lg border border-amber-100">
+                  <p className="mb-2">
+                    <strong className="text-amber-800">Local Network Access</strong>
+                  </p>
+                  If the server is running but you still see this, your browser might be blocking access to localhost.
+                  Check your browser settings for "Local Network" permissions.
+                </div>
+              </details>
+            </div>
           </div>
         </div>
       );
@@ -268,7 +294,7 @@ export default function SchemaBuilder() {
             <Server size={20} />
           </div>
           <div>
-            <h1 className="font-bold text-lg leading-tight">Mock CLI</h1>
+            <h1 className="font-bold text-lg leading-tight">MockServer</h1>
             <p className="text-xs text-gray-500 font-medium">
               Port: {schema.port} • Host: {schema.host}
             </p>
@@ -701,11 +727,11 @@ export default function SchemaBuilder() {
                             const updated = schema.resources.map((r) =>
                               r.id === selectedResource.id
                                 ? {
-                                    ...r,
-                                    pagination: v
-                                      ? { enabled: true, pageSize: 10 }
-                                      : undefined,
-                                  }
+                                  ...r,
+                                  pagination: v
+                                    ? { enabled: true, pageSize: 10 }
+                                    : undefined,
+                                }
                                 : r,
                             );
                             setSchema({ ...schema, resources: updated });
@@ -726,15 +752,15 @@ export default function SchemaBuilder() {
                             const updated = schema.resources.map((r) =>
                               r.id === selectedResource.id
                                 ? {
-                                    ...r,
-                                    errorConfig: v
-                                      ? {
-                                          rate: 0.1,
-                                          code: 500,
-                                          message: "Server Error",
-                                        }
-                                      : undefined,
-                                  }
+                                  ...r,
+                                  errorConfig: v
+                                    ? {
+                                      rate: 0.1,
+                                      code: 500,
+                                      message: "Server Error",
+                                    }
+                                    : undefined,
+                                }
                                 : r,
                             );
                             setSchema({ ...schema, resources: updated });
@@ -764,12 +790,12 @@ export default function SchemaBuilder() {
                                 const updated = schema.resources.map((r) =>
                                   r.id === selectedResource.id
                                     ? {
-                                        ...r,
-                                        errorConfig: {
-                                          ...r.errorConfig!,
-                                          rate: parseFloat(e.target.value),
-                                        },
-                                      }
+                                      ...r,
+                                      errorConfig: {
+                                        ...r.errorConfig!,
+                                        rate: parseFloat(e.target.value),
+                                      },
+                                    }
                                     : r,
                                 );
                                 setSchema({ ...schema, resources: updated });
@@ -787,12 +813,12 @@ export default function SchemaBuilder() {
                                 const updated = schema.resources.map((r) =>
                                   r.id === selectedResource.id
                                     ? {
-                                        ...r,
-                                        errorConfig: {
-                                          ...r.errorConfig!,
-                                          code: parseInt(e.target.value),
-                                        },
-                                      }
+                                      ...r,
+                                      errorConfig: {
+                                        ...r.errorConfig!,
+                                        code: parseInt(e.target.value),
+                                      },
+                                    }
                                     : r,
                                 );
                                 setSchema({ ...schema, resources: updated });
@@ -805,12 +831,12 @@ export default function SchemaBuilder() {
                                 const updated = schema.resources.map((r) =>
                                   r.id === selectedResource.id
                                     ? {
-                                        ...r,
-                                        errorConfig: {
-                                          ...r.errorConfig!,
-                                          message: e.target.value,
-                                        },
-                                      }
+                                      ...r,
+                                      errorConfig: {
+                                        ...r.errorConfig!,
+                                        message: e.target.value,
+                                      },
+                                    }
                                     : r,
                                 );
                                 setSchema({ ...schema, resources: updated });
